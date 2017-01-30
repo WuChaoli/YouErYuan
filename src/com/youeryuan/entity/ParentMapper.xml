@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.ParentMapper">  
+
+	<resultMap type="Parent" id="ParentMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="gender" column="gender" javaType="int" jdbcType="INTEGER"/>
+		<result property="age" column="age" javaType="int" jdbcType="INTEGER"/>
+		<result property="username" column="username" javaType="string" jdbcType="VARCHAR"/>
+		<result property="password" column="password" javaType="string" jdbcType="VARCHAR"/>
+		<result property="phone" column="phone" javaType="string" jdbcType="VARCHAR"/>
+		<result property="email" column="email" javaType="string" jdbcType="VARCHAR"/>
+		<result property="province" column="province" javaType="string" jdbcType="VARCHAR"/>
+		<result property="city" column="city" javaType="string" jdbcType="VARCHAR"/>
+		<result property="county" column="county" javaType="string" jdbcType="VARCHAR"/>
+		<result property="address" column="address" javaType="string" jdbcType="VARCHAR"/>
+		<result property="birthday" column="birthday" javaType="string" jdbcType="VARCHAR"/>
+		<result property="createDate" column="createDate" javaType="string" jdbcType="VARCHAR"/>
+		<result property="IDCard" column="IDCard" javaType="string" jdbcType="VARCHAR"/>
+		<collection property="children" column="id" javaType="ArrayList" ofType="Child" select="selectChildrenByParentId"/>
+		<collection property="loveSchools" column="id" javaType="ArrayList" ofType="School" select="selectLoveSchoolsByParentId"/>
+	</resultMap>
+	
+	<resultMap type="Child" id="ChildMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="gender" column="gender" javaType="int" jdbcType="INTEGER"/>
+		<result property="age" column="age" javaType="int" jdbcType="INTEGER"/>
+		<result property="birthday" column="birthday" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="School" id="SchoolMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="phone" column="phone" javaType="string" jdbcType="VARCHAR"/>
+		<result property="email" column="email" javaType="string" jdbcType="VARCHAR"/>
+		<result property="province" column="province" javaType="string" jdbcType="VARCHAR"/>
+		<result property="city" column="city" javaType="string" jdbcType="VARCHAR"/>
+		<result property="county" column="county" javaType="string" jdbcType="VARCHAR"/>
+		<result property="address" column="address" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+
+    <insert id="insertParent" parameterType="Parent" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.parents(username, password, name, gender, age, phone, email, province, city, county, address,
+       birthday, createDate, IDCard) 
+       values(#{username}, #{password}, #{name}, #{gender}, #{age}, #{phone}, #{email}, #{province}, #{city}, #{county},
+       #{address}, #{birthday}, #{createDate}, #{IDCard})  
+    </insert> 
+    
+    <insert id="insertChildOfParent" parameterType="hashmap" useGeneratedKeys="true" keyColumn="id">  
+       	insert into youeryuan.parents_children(parentId, childId) values(#{parentId}, #{childId})  
+    </insert>  
+    
+    <insert id="insertLoveSchoolOfParent" parameterType="hashmap">
+    	insert into youeryuan.parents_love(parentId, schoolId) values(#{parentId}, #{schoolId})
+    </insert>
+    
+    
+     
+    <update id="updateParentSimpleData" parameterType="Parent">  
+       	update youeryuan.parents set name=#{name}, gender=#{gender}, age=#{age}, phone=#{phone}, email=#{email}, 
+       	birthday=#{birthday}, createDate=#{createDate}, IDCard=#{IDCard}
+       	where id=#{id}  
+    </update>  
+    
+    <update id="updateParentAddress" parameterType="Parent">
+    	update youeryuan.parents set province=#{province}, city=#{city}, county=#{county}, address=#{address} where id=#{id}  
+    </update>
+    
+    <update id="updateParentPassword" parameterType="Parent">
+    	update youeryuan.parents set password=#{password} where id=#{id}  
+    </update>
+    
+    
+     
+    <select id="selectParentById" parameterType="int" resultMap="ParentMap">  
+       	select * from youeryuan.parents where id=#{id}  
+    </select>
+    
+    <select id="selectParentByUsername" parameterType="string" resultMap="ParentMap">  
+       	select * from youeryuan.parents where username=#{username}  
+    </select>
+    
+    <select id="selectCountParentByUsername" parameterType="string" resultType="int">  
+       	select count(id) from youeryuan.parents where username=#{username}  
+    </select>
+    
+    <select id="selectParentsByName" parameterType="string" resultMap="ParentMap">
+    	select * from youeryuan.parents where name like #{name}
+    </select>
+    
+    <select id="selectParentsByAddress" parameterType="Parent" resultMap="ParentMap">
+    	select * from youeryuan.parents where province like #{province} and city like #{city} and county like #{county} and address like #{address}
+    </select>
+    
+    <select id="selectChildrenByParentId" parameterType="int" resultMap="ChildMap">  
+       	select youeryuan.children.* 
+       	from youeryuan.children, youeryuan.parents_children 
+       	where youeryuan.parents_children.parentId=#{id} 
+       	and youeryuan.parents_children.childId=youeryuan.children.id
+    </select>
+    
+    <select id="selectLoveSchoolsByParentId" parameterType="int" resultMap="SchoolMap">
+    	select youeryuan.schools.id,
+    	youeryuan.schools.name,
+    	youeryuan.schools.phone,
+    	youeryuan.schools.email,
+    	youeryuan.schools.province,
+    	youeryuan.schools.city,
+    	youeryuan.schools.county,
+    	youeryuan.schools.address
+    	from youeryuan.schools, youeryuan.parents_love 
+    	where youeryuan.parents_love.parentId=#{id} and youeryuan.parents_love.schoolId=youeryuan.schools.id
+    </select>
+    
+    <select id="selectAll" resultMap="ParentMap">
+		select * from youeryuan.parents
+	</select>
+	
+	
+     
+    <delete id="deleteParentById" parameterType="int">  
+      	delete from youeryuan.parents where id=#{id}  
+    </delete>
+    
+    <delete id="deleteParentByUsername" parameterType="string">  
+      	delete from youeryuan.parents where username=#{username}  
+    </delete>
+    
+    <delete id="deleteChildOfParent" parameterType="hashmap">  
+      	delete from youeryuan.parents_children where parentId=#{parentId} and childId=#{childId}
+    </delete>
+    
+    <delete id="deleteAllChildrenOfParent" parameterType="int">  
+      	delete from youeryuan.parents_children where parentId=#{parentId}
+    </delete>
+    
+    <delete id="deleteLoveSchoolOfParent" parameterType="hashmap">  
+      	delete from youeryuan.parents_love where parentId=#{parentId} and schoolId=#{schoolId}
+    </delete>
+    
+    <delete id="deleteAllLoveSchoolsOfParent" parameterType="hashmap">  
+      	delete from youeryuan.parents_love where parentId=#{parentId}
+    </delete>
+
+</mapper>  

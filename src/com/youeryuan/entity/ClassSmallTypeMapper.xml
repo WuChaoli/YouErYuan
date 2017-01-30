@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.ClassSmallTypeMapper">  
+
+	<insert id="insertClassSmallType" parameterType="ClassLargeType"  useGeneratedKeys="true" keyColumn="id">
+		insert into youeryuan.classsmalltypes(largeTypeId, typeName) values(#{largeTypeId}, #{typeName})
+	</insert>
+
+
+
+    <update id="updateSimpleData" parameterType="ClassLargeType">  
+       	update youeryuan.classsmalltypes 
+       	set largeTypeId=#{largeTypeId}, typeName=#{typeName}
+       	where id=#{id}  
+    </update>  
+    
+    
+     
+    <select id="selectClassSmallTypeById" parameterType="int" resultType="ClassSmallType">  
+       	select * from youeryuan.classsmalltypes where id=#{id}  
+    </select>
+    
+    <select id="selectAll" resultType="ClassSmallType">
+    	select * from youeryuan.classsmalltypes
+    </select>
+
+    
+    
+    <delete id="deleteClassSmallTypeById" parameterType="int">  
+      	delete from youeryuan.classsmalltypes where id=#{id}  
+    </delete>
+    
+    <delete id="deleteClassSmallTypesByLargeTypeId" parameterType="int">
+    	delete from youeryuan.classsmalltypes where largeTypeId=#{largeTypeId} 
+    </delete>
+    
+    
+</mapper>  

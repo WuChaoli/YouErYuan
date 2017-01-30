@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.ClassLargeTypeMapper">  
+
+	<resultMap type="ClassLargeType" id="ClassLargeTypeMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="typeName" column="typeName" javaType="string" jdbcType="VARCHAR"/>
+		<collection property="classSmallTypes" column="id" javaType="ArrayList" ofType="ClassSmallType" 
+		select="selectClassSmallTypesByLargeTypeId"/>
+	</resultMap>
+	
+	<resultMap type="ClassSmallType" id="ClassSmallTypeMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="typeName" column="typeName" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+    <insert id="insertClassLargeType" parameterType="ClassLargeType" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.classlargetypes(typeName) values(#{typeName}) 
+    </insert>  
+    
+
+     
+    <update id="updateSimpleData" parameterType="ClassLargeType">  
+       	update youeryuan.classlargetypes 
+       	set typeName=#{typeName}
+       	where id=#{id}  
+    </update>  
+    
+    
+     
+    <select id="selectClassLargeTypeById" parameterType="int" resultMap="ClassLargeTypeMap">  
+       	select * from youeryuan.classlargetypes where id=#{id}  
+    </select>
+    
+    <select id="selectClassSmallTypesByLargeTypeId" parameterType="int" resultMap="ClassSmallTypeMap">  
+       	select * from youeryuan.classsmalltypes where largeTypeId=#{largeTypeId}  
+    </select>
+    
+    <select id="selectAll" resultMap="ClassLargeTypeMap">
+    	select * from youeryuan.classlargetypes
+    </select>
+
+    
+    
+    <delete id="deleteClassLargeTypeById" parameterType="int">  
+      	delete from youeryuan.classlargetypes where id=#{id}  
+    </delete>
+    
+    
+</mapper>  

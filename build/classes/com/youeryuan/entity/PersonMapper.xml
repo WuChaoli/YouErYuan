@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.PersonMapper">  
+
+    <insert id="insertPerson" parameterType="Person" useGeneratedKeys="true" keyColumn="id">  
+       insert into test.index(name, address, phone) values(#{name}, #{address}, #{phone})  
+    </insert>  
+     
+    <update id="updatePerson" parameterType="Person">  
+       update test.index set name=#{name}, address=#{address}, phone=#{phone} where id=#{id}  
+    </update>  
+     
+    <select id="selectPersonById" parameterType="int" resultType="Person">  
+       select * from test.index where id=#{id}  
+    </select>
+    
+    <select id="selectPersonsByName" parameterType="string" resultType="Person">
+    	select * from test.index where name=#{name}
+    </select>
+    
+    <select id="selectAll" resultType="Person">
+		select * from test.index
+	</select>
+     
+    <delete id="deletePerson" parameterType="int">  
+       delete from test.index where id=#{id}  
+    </delete>  
+</mapper>  

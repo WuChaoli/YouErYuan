@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.ChildMapper">  
+	
+	<resultMap type="Child" id="ChildMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="gender" column="gender" javaType="int" jdbcType="INTEGER"/>
+		<result property="age" column="age" javaType="int" jdbcType="INTEGER"/>
+		<result property="studyTime" column="studyTime" javaType="int" jdbcType="INTEGER"/>
+		<result property="birthday" column="birthday" javaType="string" jdbcType="VARCHAR"/>
+		<result property="createDate" column="createDate" javaType="string" jdbcType="VARCHAR"/>
+		<collection property="parents" column="id" javaType="ArrayList" ofType="Parent" select="selectParentsByChildId"/>
+	</resultMap>
+	
+	<resultMap type="Parent" id="ParentMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="gender" column="gender" javaType="int" jdbcType="INTEGER"/>
+		<result property="age" column="age" javaType="int" jdbcType="INTEGER"/>
+		<result property="phone" column="phone" javaType="string" jdbcType="VARCHAR"/>
+		<result property="birthday" column="birthday" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+
+    <insert id="insertChild" parameterType="Child" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.children(name, gender, age, birthday, studyTime, createDate) 
+       values(#{name}, #{gender}, #{age}, #{birthday}, #{studyTime}, #{createDate}) 
+    </insert>  
+    
+    <insert id="insertParentOfChild" parameterType="hashmap" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.parents_children(parentId, childId) values(#{parentId}, #{childId})  
+    </insert> 
+
+    <insert id="insertSchoolOfChild" parameterType="hashmap">
+    	insert into youeryuan.children_schools(childId, schoolId) values(#{childId}, #{schoolId})
+    </insert>
+     
+    
+     
+    <update id="updateChildSimpleData" parameterType="Child">  
+       	update youeryuan.children set name=#{name}, gender=#{gender}, age=#{age}, birthday=#{birthday}, 
+       	studyTime=#{studyTime}
+       	where id=#{id}  
+    </update>  
+    
+    
+     
+    <select id="selectChildById" parameterType="int" resultMap="ChildMap">  
+       	select * from youeryuan.children where id=#{id}  
+    </select>
+    
+    <select id="selectChildrenByName" parameterType="string" resultMap="ChildMap">
+    	select * from youeryuan.children where name like #{name}
+    </select>
+    
+    <select id="selectParentsByChildId" parameterType="int" resultMap="ParentMap">
+    	select youeryuan.parents.id, 
+    	youeryuan.parents.name, 
+    	youeryuan.parents.gender, 
+    	youeryuan.parents.age, 
+    	youeryuan.parents.phone
+    	from youeryuan.parents, youeryuan.parents_children 
+    	where youeryuan.parents_children.childId=#{id} and youeryuan.parents_children.parentId=youeryuan.parents.id
+    </select>
+    
+    <select id="selectSchoolsByChildId" parameterType="int" resultType="School">
+    	select youeryuan.schools.* from youeryuan.schools, youeryuan.children_schools where youeryuan.children_schools.childId=#{id} 
+       	and youeryuan.children_schools.schoolId=youeryuan.schools.id
+    </select>
+    
+    <select id="selectAll" resultMap="ChildMap">
+		select * from youeryuan.children
+	</select>
+     
+     
+    
+    <delete id="deleteChildById" parameterType="int">  
+      	delete from youeryuan.children where id=#{id}  
+    </delete>
+    
+    <delete id="deleteParentOfChild" parameterType="hashmap">  
+      	delete from youeryuan.parents_children where parentId=#{parentId} and childId=#{childId}
+    </delete>
+    
+    <delete id="deleteAllParentsOfChild" parameterType="int">  
+      	delete from youeryuan.parents_children where childId=#{childId}
+    </delete>
+    
+    <delete id="deleteSchoolOfChild" parameterType="hashmap">  
+      	delete from youeryuan.children_schools where childId=#{childId} and schoolId=#{schoolId}
+    </delete>
+    
+    <delete id="deleteAllSchoolsOfChild" parameterType="int">  
+      	delete from youeryuan.children_schools where childId=#{childId}
+    </delete>
+    
+</mapper>  

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.ClassMapper">  
+
+	<resultMap type="Clazz" id="ClassMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="className" column="className" javaType="string" jdbcType="VARCHAR"/>
+		<result property="schoolId" column="schoolId" javaType="int" jdbcType="INTEGER"/>
+		<result property="classNumber" column="classNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="currentIndex" column="currentIndex" javaType="int" jdbcType="INTEGER"/>
+		<result property="startDate" column="startDate" javaType="string" jdbcType="VARCHAR"/>
+		<result property="lastDays" column="lastDays" javaType="int" jdbcType="INTEGER"/>
+		<result property="singleLessonTime" column="singleLessonTime" javaType="int" jdbcType="INTEGER"/>
+		<result property="averageScore" column="averageScore" javaType="double" jdbcType="DOUBLE"/>
+		<result property="evaluationNumber" column="evaluationNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="classLargeType" column="classLargeType" javaType="int" jdbcType="INTEGER"/>
+		<result property="classSmallType" column="classSmallType" javaType="int" jdbcType="INTEGER"/>
+		<result property="classScale" column="classScale" javaType="int" jdbcType="INTEGER"/>
+		<result property="graduationNumber" column="graduationNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="attendingNumber" column="attendingNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="description" column="description" javaType="string" jdbcType="VARCHAR"/>
+		<result property="createDate" column="createDate" javaType="string" jdbcType="VARCHAR"/>
+		<collection property="lessons" column="id" javaType="ArrayList" ofType="Lesson" select="selectLessonsByClassId"/>
+		<collection property="tags" column="id" javaType="ArrayList" ofType="Tag" select="selectTagsByClassId"/>
+	</resultMap>
+	
+	<resultMap type="Lesson" id="LessonMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="lessonName" column="lessonName" javaType="string" jdbcType="VARCHAR"/>
+		<result property="index" column="index" javaType="int" jdbcType="INTEGER"/>
+		<result property="startTime" column="startTime" javaType="string" jdbcType="VARCHAR"/>
+		<result property="descripton" column="descripton" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="Tag" id="TagMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="tagName" column="tagName" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	
+    <insert id="insertClass" parameterType="Clazz" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.classes(className, schoolId, classNumber, currentIndex, startDate, lastDays, singleLessonTime, 
+       averageScore, evaluationNumber, classLargeType, classSmallType, classScale, graduationNumber, 
+       attendingNumber, price, description, createDate) 
+       values(#{className}, #{schoolId}, #{classNumber}, #{currentIndex}, #{startDate}, #{lastDays}, 
+       #{singleLessonTime}, #{averageScore}, #{evaluationNumber}, #{classLargeType}, #{classSmallType}, #{classScale},
+        #{graduationNumber}, #{attendingNumber}, #{price}, #{description}, #{createDate}) 
+    </insert>  
+    
+     
+     
+    <update id="updateClassData" parameterType="Clazz">  
+       	update youeryuan.classes 
+       	set className=#{className}, classNumber=#{classNumber}, currentIndex=#{currentIndex}, startDate=#{startDate},
+       	lastDays=#{lastDays}, singleLessonTime=#{singleLessonTime}, classScale=#{classScale}, description=#{description},
+       	price=#{price}
+       	where id=#{id}  
+    </update>  
+    
+    <update id="updateClassProcess" parameterType="Clazz">  
+       	update youeryuan.classes 
+       	set currentIndex=#{currentIndex}
+       	where id=#{id}  
+    </update> 
+    
+    <update id="updateClassBelong" parameterType="Clazz">  
+       	update youeryuan.classes 
+       	set schoolId=#{schoolId}
+       	where id=#{id}  
+    </update>  
+    
+    <update id="updateClassEvaluation" parameterType="Clazz">  
+       	update youeryuan.classes 
+       	set averageScore=#{averageScore}, evaluationNumber=#{evaluationNumber}
+       	where id=#{id}  
+    </update> 
+    
+    <update id="updateClassType" parameterType="Clazz">  
+       	update youeryuan.classes 
+       	set classLargeType=#{classLargeType}, classSmallType=#{classSmallType}
+       	where id=#{id}  
+    </update> 
+    
+    <update id="updateClassPopulation" parameterType="Clazz">  
+       	update youeryuan.classes 
+       	set graduationNumber=#{graduationNumber}, attendingNumber=#{attendingNumber}
+       	where id=#{id}  
+    </update> 
+    
+    <update id="updateAll" parameterType="Clazz">
+   		update youeryuan.classes
+       	set className=#{className}, schoolId=#{schoolId}, classNumber=#{classNumber}, currentIndex=#{currentIndex}, 
+       	startDate=#{startDate}, lastDays=#{lastDays}, singleLessonTime=#{singleLessonTime}, averageScore=#{averageScore}, 
+      	evaluationNumber=#{evaluationNumber}, classLargeType=#{classLargeType}, classSmallType=#{classSmallType}, 
+       	classScale=#{classScale}, graduationNumber=#{graduationNumber}, attendingNumber=#{attendingNumber}, 
+       	description=#{description}, createDate=#{createDate}
+       	where id=#{id}
+    </update>
+    
+    
+    
+    <select id="selectClassById" parameterType="int" resultMap="ClassMap">  
+       	select * from youeryuan.classes where id=#{id}  
+    </select>
+    
+    <select id="selectClassesByName" parameterType="String" resultMap="ClassMap">  
+       	select * from youeryuan.classes where className like #{className}  
+    </select>
+    
+    <select id="selectClassesBySchoolId" parameterType="int" resultMap="ClassMap">  
+       	select * from youeryuan.classes where schoolId=#{schoolId}  
+    </select>
+    
+    <select id="selectClassesByClassNumber" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes where classNumber between #{minNumber} and #{maxNumber}  
+    </select>
+    
+    <select id="selectClassesBySingleLessonTime" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes where singleLessonTime between #{minTime} and #{maxTime}  
+    </select>
+    
+    <select id="selectClassesByAverageScore" parameterType="double" resultMap="ClassMap">  
+       	select * from youeryuan.classes where averageScore >= #{requestScore} order by averageScore desc
+    </select>
+    
+    <select id="selectClassesByClassLargeType" parameterType="int" resultMap="ClassMap">  
+       	select * from youeryuan.classes where classLargeType = #{classLargeType}
+    </select>
+    
+    <select id="selectClassesByClassSmallType" parameterType="int" resultMap="ClassMap">  
+       	select * from youeryuan.classes where classSmallType = #{classSmallType}
+    </select>
+    
+    <select id="selectClassesByClassScale" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes where classScale between #{minScale} and #{maxScale}
+    </select>
+    
+    <select id="selectClassesByAttendingNumber" parameterType="int" resultMap="ClassMap">  
+       	select * from youeryuan.classes where attendingNumber >= #{attendingNumber}
+    </select>
+    
+    <select id="selectLessonsByClassId" parameterType="int" resultMap="LessonMap">  
+       	select * from youeryuan.lessons where id=#{id}  
+    </select>
+    
+    <select id="selectTagsByClassId" parameterType="int" resultMap="TagMap">  
+       	select * from youeryuan.tags where id=#{id}  
+    </select>
+    
+    <select id="selectAll" resultMap="ClassMap">  
+       	select * from youeryuan.classes
+    </select>
+    
+    <select id="selectClassesByGraduationNumberByAscOrder" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes 
+		where graduationNumber >= #{graduationNumber}
+		order by graduationNumber asc
+		limit #{minSize},#{maxSize};
+    </select>
+    
+    <select id="selectClassesByPriceByAscOrder" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes 
+		where price between #{minPrice} and #{maxPrice}
+		order by price asc
+		limit #{minSize},#{maxSize};
+    </select>
+    
+    <select id="selectClassesByPriceByDescOrder" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes 
+		where price between #{minPrice} and #{maxPrice}
+		order by price desc
+		limit #{minSize},#{maxSize};
+    </select>
+    
+    <select id="selectClassesByAddress" parameterType="hashmap" resultMap="ClassMap">  
+       	select * from youeryuan.classes, youeryuan.schools
+		where youeryuan.classes.schoolId = youeryuan.schools.id
+		and youeryuan.schools.province like #{province} 
+		and youeryuan.schools.city like #{city} 
+		and youeryuan.schools.county like #{county}
+		limit #{minSize},#{maxSize};
+    </select>
+
+
+    
+    <delete id="deleteClassById" parameterType="int">  
+      	delete from youeryuan.classes where id=#{id}  
+    </delete>
+    <delete id="deleteClassesBySchoolId" parameterType="int">  
+      	delete from youeryuan.classes where schoolId=#{schoolId}  
+    </delete>
+    
+</mapper>  
+    

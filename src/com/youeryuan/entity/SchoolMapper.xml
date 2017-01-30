@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.SchoolMapper">  
+
+	<resultMap type="School" id="SchoolMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="username" column="username" javaType="string" jdbcType="VARCHAR"/>
+		<result property="password" column="password" javaType="string" jdbcType="VARCHAR"/>
+		<result property="phone" column="phone" javaType="string" jdbcType="VARCHAR"/>
+		<result property="email" column="email" javaType="string" jdbcType="VARCHAR"/>
+		<result property="province" column="province" javaType="string" jdbcType="VARCHAR"/>
+		<result property="city" column="city" javaType="string" jdbcType="VARCHAR"/>
+		<result property="county" column="county" javaType="string" jdbcType="VARCHAR"/>
+		<result property="address" column="address" javaType="string" jdbcType="VARCHAR"/>
+		<result property="averageScore" column="averageScore" javaType="double" jdbcType="DOUBLE"/>
+		<result property="classNumber" column="classNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="credit" column="credit" javaType="int" jdbcType="INTEGER"/>
+		<result property="averagePrice" column="averagePrice" javaType="int" jdbcType="INTEGER"/>
+		<result property="description" column="description" javaType="string" jdbcType="VARCHAR"/>
+		<result property="createDate" column="createDate" javaType="string" jdbcType="VARCHAR"/>
+		<!-- 联合查询可用于	为简单类型变量调用select语句 -->
+		<association property="loveCount" column="id" select="selectCountBeenLovedBySchoolId" javaType="int"/>
+		<collection property="children" column="id" javaType="ArrayList" ofType="Child" select="selectChildrenBySchoolId"/>
+		<collection property="classes" column="id" javaType="ArrayList" ofType="Clazz" select="selectClassesBySchoolId"/>
+	</resultMap>
+	
+	<resultMap type="Child" id="ChildMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="gender" column="gender" javaType="int" jdbcType="INTEGER"/>
+		<result property="age" column="age" javaType="int" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="Clazz" id="ClassMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="className" column="className" javaType="string" jdbcType="VARCHAR"/>
+		<result property="classNumber" column="classNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="currentIndex" column="currentIndex" javaType="int" jdbcType="INTEGER"/>
+		<result property="startDate" column="startDate" javaType="int" jdbcType="INTEGER"/>
+		<result property="lastDays" column="lastDays" javaType="int" jdbcType="INTEGER"/>
+		<result property="singleLessonTime" column="singleLessonTime" javaType="int" jdbcType="INTEGER"/>
+		<result property="averageScore" column="averageScore" javaType="double" jdbcType="DOUBLE"/>
+		<result property="evaluationNumber" column="evaluationNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="classLargeType" column="classLargeType" javaType="int" jdbcType="INTEGER"/>
+		<result property="classSmallType" column="classSmallType" javaType="int" jdbcType="INTEGER"/>
+		<result property="classScale" column="classScale" javaType="int" jdbcType="INTEGER"/>
+		<result property="graduationNumber" column="graduationNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="attendingNumber" column="attendingNumber" javaType="int" jdbcType="INTEGER"/>
+		<result property="description" column="description" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+
+    <insert id="insertSchool" parameterType="School" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.schools(username, password, name, phone, email, province, city, county, address, averageScore,
+       classNumber, credit, averagePrice, description, createDate) 
+       values(#{username}, #{password}, #{name}, #{phone}, #{email}, #{province}, #{city}, #{county}, #{address},
+       #{averageScore}, #{classNumber}, #{credit}, #{averagePrice}, #{description}, #{createDate})  
+    </insert>  
+
+    <insert id="insertChildOfSchool" parameterType="hashmap">
+    	insert into youeryuan.children_schools(childId, schoolId) values(#{childId}, #{schoolId})
+    </insert>
+    
+    
+     
+    <update id="updateSchoolSimpleData" parameterType="School">  
+       	update youeryuan.schools set name=#{name}, phone=#{phone}, email=#{email}, averageScore=#{averageScore},
+       	classNumber=#{classNumber}, credit=#{credit}， averagePrice=#{averagePrice}， description=#{description}
+       	where id=#{id}  
+    </update>  
+    
+    <update id="updateSchoolAddress" parameterType="School">
+    	update youeryuan.schools set province=#{province}, city=#{city}, county=#{county}, address=#{address} where id=#{id}  
+    </update>
+    
+    <update id="updateSchoolPassword" parameterType="School">
+    	update youeryuan.schools set password=#{password} where id=#{id}  
+    </update>
+    
+    
+     
+    <select id="selectSchoolById" parameterType="int" resultMap="SchoolMap">  
+       	select * from youeryuan.schools where id=#{id}  
+    </select>
+    
+    <select id="selectSchoolByUsername" parameterType="string" resultMap="SchoolMap">  
+       	select * from youeryuan.schools where username=#{username}  
+    </select>
+    
+    <select id="selectCountSchoolByUsername" parameterType="string" resultType="int">  
+       	select count(id) from youeryuan.schools where username=#{username}  
+    </select>
+    
+    <select id="selectSchoolsByName" parameterType="string" resultMap="SchoolMap">
+    	select * from youeryuan.schools where name like #{name}
+    </select>
+    
+    <select id="selectSchoolsByAddress" parameterType="School" resultMap="SchoolMap">
+    	select * from youeryuan.schools where province like #{province} and city like #{city} and county like #{county} and address like #{address}
+    </select>
+    
+    <select id="selectChildrenBySchoolId" parameterType="int" resultMap="ChildMap">
+    	select youeryuan.children.* from youeryuan.children, youeryuan.children_schools where youeryuan.children_schools.schoolId=#{id} 
+       	and youeryuan.children_schools.childId=youeryuan.children.id
+    </select>
+    
+    <select id="selectCountBeenLovedBySchoolId" parameterType="int" resultType="int">
+    	select count(id) from youeryuan.parents_love where schoolId=#{id}
+    </select>
+    
+    <select id="selectClassesBySchoolId" parameterType="int" resultMap="ClassMap">
+    	select id, className, classNumber, currentIndex, startDate, lastDays, singleLessonTime, averageScore, 
+    	evaluationNumber, classLargeType, classSmallType, classScale, graduationNumber, attendingNumber, description
+    	from youeryuan.classes 
+    	where schoolId=#{id}
+    </select>
+    
+    <select id="selectAll" resultMap="SchoolMap">
+		select * from youeryuan.schools
+	</select>
+	
+	
+     
+    <delete id="deleteSchoolById" parameterType="int">  
+      	delete from youeryuan.schools where id=#{id}  
+    </delete>
+    
+    <delete id="deleteSchoolByUsername" parameterType="string">  
+      	delete from youeryuan.schools where username=#{username}  
+    </delete>
+    
+    <delete id="deleteChildOfSchool" parameterType="hashmap">  
+      	delete from youeryuan.children_schools where childId=#{childId} and schoolId=#{schoolId}
+    </delete>
+    
+    <delete id="deleteAllChildrenOfSchool" parameterType="int">  
+      	delete from youeryuan.children_schools where schoolId=#{schoolId}
+    </delete>
+    
+    <delete id="deleteAllParentsOfSchool" parameterType="int">  
+      	delete from youeryuan.parents_love where schoolId=#{schoolId}
+    </delete>
+    
+</mapper>  

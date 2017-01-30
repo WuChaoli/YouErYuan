@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+default-autowire="byName">
+
+	<!-- 该 BeanPostProcessor 将自动起作用，对标注 @Autowired 的 Bean 进行自动注入 -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+    
+    <!-- 除了在 Bean 类中标注@Resource注释外，还需要在 Spring 容器中注册一个负责处理这些注释的 BeanPostProcessor -->
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+	
+<!-- 	<bean class="com.youeryuan.entity.Child" id="child">
+		<property name="id" value="3"></property>
+		<property name="name" value="qiao"></property>
+		<property name="gender" value="0"></property>
+		<property name="age" value="25"></property>
+	</bean> -->
+	<bean class="com.youeryuan.entity.Parent" id="parent">
+		<property name="id" value="2"></property>
+		<property name="username" value="434518591"></property>
+		<property name="password" value="12345"></property>
+		<property name="name" value="wuchaoli"></property>
+		<property name="gender" value="1"></property>
+		<property name="age" value="20"></property>
+		<property name="phone" value="15957141965"></property>
+		<property name="email" value="434518591@qq.com"></property>
+		<property name="province" value="%Zhejiang%"></property>
+		<property name="city" value="%Jiaxing%"></property>
+		<property name="county" value="%Nanhu%"></property>
+		<property name="address" value="%Fengqiaozhen%"></property>
+	</bean>
+	<bean class="com.youeryuan.entity.School" id="school">
+		<property name="id" value="3"></property>
+		<property name="username" value="434518591"></property>
+		<property name="password" value="123456"></property>
+		<property name="name" value="charlie"></property>
+		<property name="phone" value="15957141965"></property>
+		<property name="email" value="434518591@qq.com"></property>
+		<property name="province" value="%Zhejiang%"></property>
+		<property name="city" value="%Jiaxing%"></property>
+		<property name="county" value="%Nanhu%"></property>
+		<property name="address" value="%Fengqiaozhen%"></property>
+	</bean>
+	<bean class="com.youeryuan.entity.Clazz" id="clazz">
+		<property name="id" value="1"></property>
+		<property name="className" value="书法小培训班"></property>
+		<property name="schoolId" value="2"></property>
+		<property name="classNumber" value="20"></property>
+		<property name="currentIndex" value="0"></property>
+		<property name="startDate" value="2017-1-13"></property>
+		<property name="lastDays" value="60"></property>
+		<property name="singleLessonTime" value="40"></property>
+		<property name="averageScore" value="4.3"></property>
+		<property name="evaluationNumber" value="147"></property>
+		<property name="classLargeType" value="1"></property>
+		<property name="classSmallType" value="2"></property>
+		<property name="classScale" value="30"></property>
+		<property name="graduationNumber" value="60"></property>
+		<property name="attendingNumber" value="30"></property>
+		<property name="description" value="这是培养国学的课程"></property>
+		<property name="createDate" value="2016-11-25 13:30:40"></property>
+	</bean>
+	<bean class="com.youeryuan.entity.Lesson" id="lesson">
+		<property name="id" value="2"></property>
+		<property name="lessonName" value="墨水的品种辨认"></property>
+		<property name="classId" value="1"></property>
+		<property name="lessonIndex" value="1"></property>
+		<property name="startTime" value="2017-2-1"></property>
+		<property name="description" value="墨水种类"></property>
+		<property name="createDate" value="2017-1-4"></property>
+	</bean>
+	<bean class="com.youeryuan.entity.ClassLargeType" id="classLargeType">
+		<property name="id" value="1"></property>
+		<property name="typeName" value="汉学"></property>
+	</bean>
+	<bean class="com.youeryuan.entity.ClassSmallType" id="classSmallType">
+		<property name="id" value="1"></property>
+		<property name="largeTypeId" value="2"></property>
+		<property name="typeName" value="水墨"></property>
+	</bean>
+	<bean class="com.youeryuan.entity.Tag" id="tag">
+		<property name="id" value="1"></property>
+		<property name="tagName" value="情操"></property>
+	</bean>
+	
+	<context:component-scan base-package="com.youeryuan.entity"/>
+	<context:component-scan base-package="com.youeryuan.dao"/>
+	<context:component-scan base-package="com.youeryuan.utils"/>
+</beans>

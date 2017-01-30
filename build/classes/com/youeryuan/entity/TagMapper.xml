@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.TagMapper">  
+
+	<insert id="insertTag" parameterType="Tag"  useGeneratedKeys="true" keyColumn="id">
+		insert into youeryuan.tags(tagName) values(#{tagName})
+	</insert>
+
+
+
+    <update id="updateSimpleData" parameterType="Tag">  
+       	update youeryuan.tags 
+       	set tagName=#{tagName}
+       	where id=#{id}  
+    </update>  
+    
+    
+     
+    <select id="selectTagById" parameterType="int" resultType="Tag">  
+       	select * from youeryuan.tags where id=#{id}  
+    </select>
+    
+    <select id="selectAll" resultType="Tag">
+    	select * from youeryuan.tags
+    </select>
+
+    
+    
+    <delete id="deleteTagById" parameterType="int">  
+      	delete from youeryuan.tags where id=#{id}  
+    </delete>
+    
+    
+</mapper> 

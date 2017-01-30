@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   
+<mapper namespace="com.youeryuan.entity.LessonMapper">  
+	
+    <insert id="insertLesson" parameterType="Lesson" useGeneratedKeys="true" keyColumn="id">  
+       insert into youeryuan.lessons(lessonName, classId, lessonIndex, startTime, description, createDate) 
+       values(#{lessonName}, #{classId}, #{lessonIndex}, #{startTime}, #{description}, #{createDate}) 
+    </insert>  
+    
+
+     
+    <update id="updateSimpleData" parameterType="Lesson">  
+       	update youeryuan.lessons 
+       	set lessonName=#{lessonName}, lessonIndex=#{lessonIndex}, startTime=#{startTime}, description=#{description}, createDate=#{createDate}
+       	where id=#{id}  
+    </update>  
+    
+    <update id="updateClass" parameterType="Lesson">  
+       	update youeryuan.lessons 
+       	set classId=#{classId}
+       	where id=#{id}  
+    </update>  
+    
+    
+     
+    <select id="selectLessonById" parameterType="int" resultType="Lesson">  
+       	select * from youeryuan.lessons where id=#{id}  
+    </select>
+    
+    <select id="selectLessonsByLessonName" parameterType="String" resultType="Lesson">  
+       	select * from youeryuan.lessons where lessonName like #{lessonName}  
+    </select>
+    
+    <select id="selectLessonsByClassId" parameterType="int" resultType="Lesson">  
+       	select * from youeryuan.lessons where classId=#{classId} order by lessonIndex ASC
+    </select>
+    
+    <select id="selectAll" resultType="Lesson">
+    	select * from youeryuan.lessons
+    </select>
+
+    
+    
+    <delete id="deleteLessonById" parameterType="int">  
+      	delete from youeryuan.lessons where id=#{id}  
+    </delete>
+    
+    <delete id="deleteLessonByClassId" parameterType="int">  
+      	delete from youeryuan.lessons where classId=#{classId}  
+    </delete>
+    
+</mapper>  
